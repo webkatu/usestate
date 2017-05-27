@@ -14,7 +14,7 @@ function setState(state) {
 	});
 }
 
-export default function useState(target) {
+module.exports = function useState(target) {
 	if(typeof target !== 'function') throw new TypeError();
 
 	target.prototype.setState = setState;
