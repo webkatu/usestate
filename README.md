@@ -2,6 +2,8 @@
 
 usestate gives the webcomponents a new life cycle.
 
+It is effective when doing data binding.
+
 ```
 $ npm i -S usestate
 ```
@@ -53,7 +55,6 @@ class HelloElement extends HTMLElement {
 	constructor() {
 		super();
 		
-
 		const input = document.createElement('input');
 		input.type = 'text';
 		input.onkeyup = (e) => {
