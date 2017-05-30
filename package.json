@@ -1,6 +1,6 @@
 {
   "name": "usestate",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "usestate gives the webcomponents a new life cycle.",
   "main": "index.js",
   "scripts": {

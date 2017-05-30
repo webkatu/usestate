@@ -35,7 +35,7 @@ export default class Component extends HTMLElement {
 
 A component with usestate can use the following methods.
 - `setState(object)`
-- `stateChangedCallback(name, oldValue, newValue)`
+- `stateChangedCallback(stateName, oldValue, newValue)`
 - `static get observedState`
 
 `stateChangedCallback()` is called when a state is changed. Only called for observed state. So `stateChangedCallback()` is like `attributeChangedCallback()`.
@@ -49,7 +49,7 @@ You should define the state to be observed by `observedState()` method.
 ## example
 
 ```javascript
-import useState from 'usestate';
+import useState from 'usestate'
 
 class HelloElement extends HTMLElement {
 	constructor() {
@@ -67,6 +67,69 @@ class HelloElement extends HTMLElement {
 	}
 
 	stateChangedCallback(stateName, oldValue, newValue) {
+		switch(stateName) {
+			case 'name':
+				this.p.textContent = `Hello, ${newValue}`;
+		}
+	}
+
+	static get observedState() { return ['name']; }
+}
+
+customElements.define('hello-element', HelloElement);
+
+export default useState(HelloElement)
+```
+
+With flux.
+
+```javascript
+import EventEmitter from 'events'
+import useState from 'usestate'
+
+const dispatcher = new EventEmitter();
+
+class Store extends EventEmitter {
+	constructor() {
+		super();
+
+		this.name = '';
+
+		dispatcher.on('inputName', (value) => {
+			this.name = value;
+			this.emit('CHANGE');
+		});
+	}
+}
+const store = new Store()
+
+class HelloElement extends HTMLElement {
+	constructor() {
+		super();
+		
+		const input = document.createElement('input');
+		input.type = 'text';
+		input.onkeyup = (e) => {
+			dispatcher.emit('inputName', input.value);
+		}
+		this.appendChild(input);
+		
+		this.p = document.createElement('p');
+		this.appendChild(this.p);
+
+		this.handleStoreChange = this.handleStoreChange.bind(this);
+		store.on('CHANGE', this.handleStoreChange);
+	}
+
+	handleStoreChange() {
+		this.setState(store);
+	}
+
+	disconnectedCallback() {
+		store.removeListener('CHANGE', this.handleStoreChange);
+	}
+
+	stateChangedCallback(stateName, oldValue, newValue) {
 		if(stateName === 'name') {
 			this.p.textContent = `Hello, ${newValue}`;
 		}
@@ -77,7 +140,7 @@ class HelloElement extends HTMLElement {
 
 customElements.define('hello-element', HelloElement);
 
-export default useState(HelloElement)
+document.body.appendChild(new (useState(HelloElement)));
 ```
 
 ## License
