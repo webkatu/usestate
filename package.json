@@ -1,6 +1,6 @@
 {
   "name": "usestate",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "usestate gives the webcomponents a new life cycle.",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,7 @@
   	"WebComponents",
   	"CustomElements",
   	"Flux",
+    "data-binding",
   	"state"
   ],
   "author": {
