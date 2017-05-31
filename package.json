@@ -1,11 +1,11 @@
 {
   "name": "usestate",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "usestate gives the webcomponents a new life cycle.",
   "main": "index.js",
   "scripts": {
   },
-  "kewwords": [
+  "keywords": [
   	"WebComponents",
   	"CustomElements",
   	"Flux",
