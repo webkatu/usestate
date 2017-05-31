@@ -118,11 +118,14 @@ class HelloElement extends HTMLElement {
 		this.appendChild(this.p);
 
 		this.handleStoreChange = this.handleStoreChange.bind(this);
-		store.on('CHANGE', this.handleStoreChange);
 	}
 
 	handleStoreChange() {
 		this.setState(store);
+	}
+
+	connectedCallback() {
+		store.on('CHANGE', this.handleStoreChange);
 	}
 
 	disconnectedCallback() {
