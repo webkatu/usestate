@@ -34,13 +34,14 @@ export default class Component extends HTMLElement {
 ## What can I do with it?
 
 A component with usestate can use the following methods.
+- `getState()`
 - `setState(object)`
 - `stateChangedCallback(stateName, oldValue, newValue)`
 - `static get observedState`
 
 `stateChangedCallback()` is called when a state is changed. Only called for observed state. So `stateChangedCallback()` is like `attributeChangedCallback()`.
 
-You can use `setState()` to change a state.
+You can use `setState()` to change a state. `setState()` find the difference of state.
 
 You should define the state to be observed by `observedState()` method.
 
@@ -126,6 +127,8 @@ class HelloElement extends HTMLElement {
 
 	connectedCallback() {
 		store.on('CHANGE', this.handleStoreChange);
+		//initialization
+		this.handleStoreChange();
 	}
 
 	disconnectedCallback() {
@@ -133,8 +136,9 @@ class HelloElement extends HTMLElement {
 	}
 
 	stateChangedCallback(stateName, oldValue, newValue) {
-		if(stateName === 'name') {
-			this.p.textContent = `Hello, ${newValue}`;
+		switch(stateName) {
+			case 'name':
+				this.p.textContent = `Hello, ${newValue}`;
 		}
 	}
 

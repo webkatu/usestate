@@ -1,9 +1,20 @@
+const map = new WeakMap();
+const privates = (object) => {
+	if(! map.has(object)) {
+		map.set(object, {});
+	}
+	return map.get(object);
+};
+
+function getState() { return privates(this).state; }
+
 function setState(state) {
 	if(typeof state !== 'object' || state === null) return;
 	
-	if(typeof this.state !== 'object' || this.state === null) this.state = {};
-	const oldState = this.state;
-	const newState = this.state = Object.assign({}, this.state, state);
+	const that = privates(this);
+	if(typeof that.state !== 'object' || that.state === null) that.state = {};
+	const oldState = that.state;
+	const newState = that.state = Object.assign({}, that.state, state);
 
 	if(Array.isArray(this.constructor.observedState) === false) return;
 	if(typeof this.stateChangedCallback !== 'function') return;
@@ -17,6 +28,7 @@ function setState(state) {
 module.exports = function useState(target) {
 	if(typeof target !== 'function') throw new TypeError();
 
+	target.prototype.getState = getState;
 	target.prototype.setState = setState;
 	return target;
 }
