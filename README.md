@@ -79,7 +79,10 @@ class HelloElement extends HTMLElement {
 
 customElements.define('hello-element', HelloElement);
 
-export default useState(HelloElement)
+const helloElement = new (useState(HelloElement));
+document.body.appendChild(helloElement);
+
+helloElement.setState({ name: 'world' });
 ```
 
 With flux.
@@ -118,21 +121,11 @@ class HelloElement extends HTMLElement {
 		this.p = document.createElement('p');
 		this.appendChild(this.p);
 
-		this.handleStoreChange = this.handleStoreChange.bind(this);
-	}
-
-	handleStoreChange() {
-		this.setState(store);
-	}
-
-	connectedCallback() {
-		store.on('CHANGE', this.handleStoreChange);
+		store.on('CHANGE', () => {
+			this.setState(store);
+		});
 		//initialization
-		this.handleStoreChange();
-	}
-
-	disconnectedCallback() {
-		store.removeListener('CHANGE', this.handleStoreChange);
+		this.setState(store);
 	}
 
 	stateChangedCallback(stateName, oldValue, newValue) {
@@ -147,7 +140,8 @@ class HelloElement extends HTMLElement {
 
 customElements.define('hello-element', HelloElement);
 
-document.body.appendChild(new (useState(HelloElement)));
+const helloElement = new (useState(HelloElement));
+document.body.appendChild(helloElement);
 ```
 
 ## License
