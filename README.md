@@ -110,6 +110,8 @@ const store = new Store()
 class HelloElement extends HTMLElement {
 	constructor() {
 		super();
+
+		this.handleStoreChange = this.handleStoreChange.bind(this);
 		
 		const input = document.createElement('input');
 		input.type = 'text';
@@ -120,12 +122,20 @@ class HelloElement extends HTMLElement {
 		
 		this.p = document.createElement('p');
 		this.appendChild(this.p);
+	}
 
-		store.on('CHANGE', () => {
-			this.setState(store);
-		});
-		//initialization
+	handleStoreChange() {
 		this.setState(store);
+	}
+
+	connectedCallback() {
+		store.on('CHANGE', this.handleStoreChange);
+		//initialization
+		this.handleStoreChange();
+	}
+
+	disconnectedCallback() {
+		store.removeListener('CHANGE', this.handleStoreChange);
 	}
 
 	stateChangedCallback(stateName, oldValue, newValue) {
