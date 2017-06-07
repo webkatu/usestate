@@ -1,5 +1,5 @@
 const map = new WeakMap();
-const privates = (object) => {
+const privates = function(object) {
 	if(! map.has(object)) {
 		map.set(object, {});
 	}
@@ -19,10 +19,10 @@ function setState(state) {
 	if(Array.isArray(this.constructor.observedState) === false) return;
 	if(typeof this.stateChangedCallback !== 'function') return;
 
-	this.constructor.observedState.forEach((name) => {
+	this.constructor.observedState.forEach(function(name) {
 		if(oldState[name] === newState[name]) return;
 		this.stateChangedCallback(name, oldState[name], newState[name]);
-	});
+	}, this);
 }
 
 module.exports = function useState(target) {
